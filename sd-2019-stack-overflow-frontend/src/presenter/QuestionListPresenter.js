@@ -1,70 +1,33 @@
-import model from "../model/model";
+import sOUserModel from "../model/sOUserModel";
+import questionModel from "../model/questionModel";
 
 class QuestionListPresenter {
-    onSignUpNavbar() {
-        model.activateSignUpModal();
-    }
-
-    onCloseSignUpModal() {
-        model.deactivateSignUpModal();
-    }
-
-    onChangeNewSOUserProperty(property, value) {
-        model.changeNewSOUserProperty(property, value);
-    }
-
-    onCreateAccount() {
-        model.addSOUser(model.state.newSOUser.id, model.state.newSOUser.username, model.state.newSOUser.password);
-    }
-
-    onLogInNavbar() {
-        model.activateLogInModal();
-    }
-
-    onCloseLogInModal() {
-        model.deactivateLogInModal();
-    }
-
-    onChangeLogInSOUserProperty(property, value) {
-        model.changeLogInSOUserProperty(property, value);
-    }
-
-    onLogIn() {
-        if (!model.logIn(model.state.logInSOUser.username, model.state.logInSOUser.password)) {
-            window.alert("Invalid credentials!");
-        }
-    }
-
-    onLogOut() {
-        model.logOut();
-    }
-
     onAskQuestion() {
-        if (model.state.loggedInUsername === null) {
+        if (sOUserModel.state.loggedInUsername === null) {
             window.alert("You must be logged in to ask questions!");
             return;
         }
-        model.activateAskQuestionModal();
+        questionModel.activateAskQuestionModal();
     }
 
     onCloseAskQuestionModal() {
-        model.deactivateAskQuestionModal();
+        questionModel.deactivateAskQuestionModal();
     }
 
     onChangeNewQuestionProperty(property, value) {
-        model.changeNewQuestionProperty(property, value);
+        questionModel.changeNewQuestionProperty(property, value);
     }
 
     onChangeNewTag(newValue) {
-        model.changeNewTag(newValue);
+        questionModel.changeNewTag(newValue);
     }
 
     onCreateNewTag(newTag) {
-        model.addNewTag(newTag);
+        questionModel.addNewTag(newTag);
     }
 
     onDeleteNewTag(index) {
-        model.deleteNewTag(index);
+        questionModel.deleteNewTag(index);
     }
 
     onCreateQuestion() {
@@ -72,16 +35,33 @@ class QuestionListPresenter {
         var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         var dateTime = date+' '+time;
-        model.addQuestion(model.state.newQuestion.id, model.state.loggedInUsername, model.state.newQuestion.title,
-            model.state.newQuestion.text, dateTime, model.state.newQuestion.tags, model.state.newQuestion.voteScore);
+        questionModel.addQuestion(questionModel.state.newQuestion.id, sOUserModel.state.loggedInUsername,
+            questionModel.state.newQuestion.title, questionModel.state.newQuestion.text, dateTime,
+            questionModel.state.newQuestion.tags, questionModel.state.newQuestion.voteScore);
     }
 
     onChangeTitleFilter(newValue) {
-        model.changeTitleFilter(newValue);
+        questionModel.changeTitleFilter(newValue);
     }
 
     onChangeTagFilter(newValue) {
-        model.changeTagFilter(newValue);
+        questionModel.changeTagFilter(newValue);
+    }
+
+    onUpvoteQuestion(questionId) {
+        if (sOUserModel.state.loggedInUsername === null) {
+            window.alert("You must be logged in to vote questions!");
+            return;
+        }
+        questionModel.upvoteQuestion(questionId);
+    }
+
+    onDownvoteQuestion(questionId) {
+        if (sOUserModel.state.loggedInUsername === null) {
+            window.alert("You must be logged in to vote questions!");
+            return;
+        }
+        questionModel.downvoteQuestion(questionId);
     }
 }
 

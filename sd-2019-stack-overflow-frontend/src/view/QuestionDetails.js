@@ -1,6 +1,6 @@
 import React from "react";
 
-const QuestionDetails = ( {question} ) => (
+const QuestionDetails = ( {question, onUpvoteQuestion, onDownvoteQuestion} ) => (
     <article className="media" key={question.id}>
         <figure className="media-left">
             <div>
@@ -18,7 +18,7 @@ const QuestionDetails = ( {question} ) => (
                     <br/>{question.text}<br/>
                     {
                         // eslint-disable-next-line
-                        <small><a>Up</a>  ·  <a>Down</a>  ·  {question.author}  ·  {question.creationDateTime}</small>
+                        <small><a onClick={() => onUpvoteQuestion(question.id)}>Up</a>  ·  <a onClick={() => onDownvoteQuestion(question.id)}>Down</a>  ·  {question.author}  ·  {question.creationDateTime}</small>
                     }
                     <br/>
                     <div className="tags">

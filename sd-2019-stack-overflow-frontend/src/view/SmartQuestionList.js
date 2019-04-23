@@ -1,42 +1,47 @@
 import React, {Component} from "react";
-import model from "../model/model";
+import sOUserModel from "../model/sOUserModel";
+import questionModel from "../model/questionModel";
+import questionListPresenter from "../presenter/questionListPresenter";
+import navbarPresenter from "../presenter/navbarPresenter";
 import QuestionList from "./QuestionList";
 import NavbarNotLoggedIn from "./NavbarNotLoggedIn";
 import NavbarLoggedIn from "./NavbarLoggedIn";
 import SignUpModal from "./SignUpModal";
-import questionListPresenter from "../presenter/QuestionListPresenter";
 import LogInModal from "./LogInModal";
 import QuestionOperations from "./QuestionOperations";
 import AskQuestionModal from "./AskQuestionModal";
+import Footer from "./Footer";
 
-const mapModelStateToComponentState = modelState => (
+const mapModelStateToComponentState = (questionModelState, sOUserModelState) => (
     {
-        questions: modelState.questions,
-        loggedInUsername: modelState.loggedInUsername,
-        signUpModalActive: modelState.signUpModalActive,
-        newSOUserUsername: modelState.newSOUser.username,
-        newSOUserPassword: modelState.newSOUser.password,
-        logInModalActive: modelState.logInModalActive,
-        logInSOUserUsername: modelState.logInSOUser.username,
-        logInSOUserPassword: modelState.logInSOUser.password,
-        askQuestionModalActive: modelState.askQuestionModalActive,
-        newQuestion: modelState.newQuestion,
-        newTag: modelState.newTag,
-        titleFilter: modelState.titleFilter,
-        tagFilter: modelState.tagFilter
+        questions: questionModelState.questions,
+        askQuestionModalActive: questionModelState.askQuestionModalActive,
+        newQuestion: questionModelState.newQuestion,
+        newTag: questionModelState.newTag,
+        titleFilter: questionModelState.titleFilter,
+        tagFilter: questionModelState.tagFilter,
+        loggedInUsername: sOUserModelState.loggedInUsername,
+        signUpModalActive: sOUserModelState.signUpModalActive,
+        newSOUserUsername: sOUserModelState.newSOUser.username,
+        newSOUserPassword: sOUserModelState.newSOUser.password,
+        logInModalActive: sOUserModelState.logInModalActive,
+        logInSOUserUsername: sOUserModelState.logInSOUser.username,
+        logInSOUserPassword: sOUserModelState.logInSOUser.password
     }
 );
 
 export default class SmartQuestionList extends Component {
     constructor() {
         super();
-        this.state = mapModelStateToComponentState(model.state);
-        this.listener = modelState => this.setState(mapModelStateToComponentState(modelState));
-        model.addListener("change", this.listener);
+        this.state = mapModelStateToComponentState(questionModel.state, sOUserModel.state);
+        this.listener = () => this.setState(mapModelStateToComponentState(questionModel.state, sOUserModel.state));
+        questionModel.addListener("QuestionModelChange", this.listener);
+        sOUserModel.addListener("SOUserModelChange", this.listener);
     }
 
     componentWillUnmount() {
-        model.removeListener("change", this.listener);
+        questionModel.removeListener("QuestionModelChange", this.listener);
+        sOUserModel.removeListener("SOUserModelChange", this.listener);
     }
 
     render() {
@@ -46,13 +51,13 @@ export default class SmartQuestionList extends Component {
                     this.state.loggedInUsername === null
                         ?
                         <NavbarNotLoggedIn
-                            onSignUpNavbar={questionListPresenter.onSignUpNavbar}
-                            onLogInNavbar={questionListPresenter.onLogInNavbar}
+                            onSignUpNavbar={navbarPresenter.onSignUpNavbar}
+                            onLogInNavbar={navbarPresenter.onLogInNavbar}
                         />
                         :
                         <NavbarLoggedIn
                             loggedInUsername={this.state.loggedInUsername}
-                            onLogOut={questionListPresenter.onLogOut}
+                            onLogOut={navbarPresenter.onLogOut}
                         />
                 }
                 {
@@ -60,11 +65,11 @@ export default class SmartQuestionList extends Component {
                         ?
                         <SignUpModal
                             signUpModalClass="modal is-active"
-                            onCloseSignUpModal={questionListPresenter.onCloseSignUpModal}
+                            onCloseSignUpModal={navbarPresenter.onCloseSignUpModal}
                             username={this.state.newSOUserUsername}
                             password={this.state.newSOUserPassword}
-                            onChangeNewSOUserProperty={questionListPresenter.onChangeNewSOUserProperty}
-                            onCreateAccount={questionListPresenter.onCreateAccount}
+                            onChangeNewSOUserProperty={navbarPresenter.onChangeNewSOUserProperty}
+                            onCreateAccount={navbarPresenter.onCreateAccount}
                         />
                         :
                         <SignUpModal signUpModalClass="modal" />
@@ -74,11 +79,11 @@ export default class SmartQuestionList extends Component {
                         ?
                         <LogInModal
                             logInModalClass="modal is-active"
-                            onCloseLogInModal={questionListPresenter.onCloseLogInModal}
+                            onCloseLogInModal={navbarPresenter.onCloseLogInModal}
                             username={this.state.logInSOUserUsername}
                             password={this.state.logInSOUserPassword}
-                            onChangeLogInSOUserProperty={questionListPresenter.onChangeLogInSOUserProperty}
-                            onLogIn={questionListPresenter.onLogIn}
+                            onChangeLogInSOUserProperty={navbarPresenter.onChangeLogInSOUserProperty}
+                            onLogIn={navbarPresenter.onLogIn}
                         />
                         :
                         <LogInModal logInModalClass="modal" />
@@ -107,7 +112,12 @@ export default class SmartQuestionList extends Component {
                     onChangeTitleFilter={questionListPresenter.onChangeTitleFilter}
                     onChangeTagFilter={questionListPresenter.onChangeTagFilter}
                 />
-                <QuestionList questions={this.state.questions} />
+                <QuestionList
+                    questions={this.state.questions}
+                    onUpvoteQuestion={questionListPresenter.onUpvoteQuestion}
+                    onDownvoteQuestion={questionListPresenter.onDownvoteQuestion}
+                />
+                <Footer />
             </div>
         );
     }
