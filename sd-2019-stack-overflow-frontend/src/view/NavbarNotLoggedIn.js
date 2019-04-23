@@ -5,7 +5,7 @@ const NavbarNotLoggedIn = ( {onSignUpNavbar, onLogInNavbar} ) => (
     <nav className="navbar is-white topNav">
         <div className="container">
             <div className="navbar-brand">
-                <a className="navbar-item" href="/">
+                <a className="navbar-item" href="#/">
                     <img src={logo} alt="Stack Overflow Logo"/>
                     <big>&nbsp; Stack <strong>Overflow</strong></big>
                 </a>
