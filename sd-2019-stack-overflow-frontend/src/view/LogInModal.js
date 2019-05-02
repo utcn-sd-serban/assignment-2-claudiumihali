@@ -1,7 +1,7 @@
 import React from "react";
 
-const LogInModal = ( {logInModalClass, onCloseLogInModal, username, password, onChangeLogInSOUserProperty, onLogIn} ) => (
-    <div className={logInModalClass}>
+const LogInModal = ( {active, onCloseLogInModal, username, password, onChangeLogInSOUserProperty, onLogIn} ) => (
+    <div className={"modal" + (active ? " is-active" : "")}>
         <div className="modal-background"></div>
         <div className="modal-card">
             <header className="modal-card-head">

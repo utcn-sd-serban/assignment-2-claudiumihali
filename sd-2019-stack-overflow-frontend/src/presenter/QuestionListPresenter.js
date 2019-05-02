@@ -44,8 +44,21 @@ class QuestionListPresenter {
         questionModel.changeTitleFilter(newValue);
     }
 
+    onFilterTitle() {
+        window.location.assign("#/" + questionModel.state.titleFilter);
+        questionModel.clearTitleFilter();
+    }
+
     onChangeTagFilter(newValue) {
         questionModel.changeTagFilter(newValue);
+    }
+
+    onFilterTag() {
+        questionModel.filterByTag();
+    }
+
+    onClearFilterTag(index) {
+        questionModel.clearFilterByTag(index);
     }
 
     onUpvoteQuestion(questionId) {
@@ -62,6 +75,10 @@ class QuestionListPresenter {
             return;
         }
         questionModel.downvoteQuestion(questionId);
+    }
+
+    onExpandQuestion(questionId) {
+        window.location.assign("#/answers/" + questionId);
     }
 }
 

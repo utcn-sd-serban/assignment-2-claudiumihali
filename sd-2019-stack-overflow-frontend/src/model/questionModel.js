@@ -16,6 +16,7 @@ class QuestionModel extends EventEmitter {
             newQuestion: createQuestion(4, "", "", "", "", [], 0),
             newTag: "",
             titleFilter: "",
+            appliedTagFilters: [],
             tagFilter: "",
             askQuestionModalActive: false
         };
@@ -100,6 +101,14 @@ class QuestionModel extends EventEmitter {
         this.emit("QuestionModelChange", this.state);
     }
 
+    clearTitleFilter() {
+        this.state = {
+            ...this.state,
+            titleFilter: ""
+        };
+        this.emit("QuestionModelChange", this.state);
+    }
+
     changeTagFilter(newValue) {
         this.state = {
             ...this.state,
@@ -108,24 +117,54 @@ class QuestionModel extends EventEmitter {
         this.emit("QuestionModelChange", this.state);
     }
 
-    upvoteQuestion(questionId) {
-        var questions = [...this.state.questions];
-        var question = questions.find(q => q.id === questionId);
-        question.voteScore++;
+    filterByTag() {
         this.state = {
             ...this.state,
-            questions: questions
-        }
+            appliedTagFilters: this.state.appliedTagFilters.concat([this.state.tagFilter]),
+            tagFilter: ""
+        };
+        this.emit("QuestionModelChange", this.state);
+    }
+
+    clearFilterByTag(index) {
+        this.state = {
+            ...this.state,
+            appliedTagFilters: this.state.appliedTagFilters.filter(t => t !== this.state.appliedTagFilters[index])
+        };
+        this.emit("QuestionModelChange", this.state);
+    }
+
+    upvoteQuestion(questionId) {
+        this.state = {
+            ...this.state,
+            questions: this.state.questions.map(q => q.id === questionId ? {...q, voteScore: q.voteScore + 1} : q)
+        };
         this.emit("QuestionModelChange", this.state);
     }
 
     downvoteQuestion(questionId) {
-        var questions = [...this.state.questions];
-        var question = questions.find(q => q.id === questionId);
-        question.voteScore--;
         this.state = {
             ...this.state,
-            questions: questions
+            questions: this.state.questions.map(q => q.id === questionId ? {...q, voteScore: q.voteScore - 1} : q)
+        };
+        this.emit("QuestionModelChange", this.state);
+    }
+
+    activateEditQuestionModal(question) {
+        this.state = {
+            ...this.state,
+            newQuestion: {...question},
+            askQuestionModalActive: true
+        }
+        this.emit("QuestionModelChange", this.state);
+    }
+
+    editQuestion() {
+        this.state = {
+            ...this.state,
+            questions: this.state.questions.map(q => q.id === this.state.newQuestion.id ? {...this.state.newQuestion} : q),
+            newQuestion: createQuestion(this.state.questions[this.state.questions.length - 1].id + 1, "", "", "", "", [], 0),
+            askQuestionModalActive: false
         }
         this.emit("QuestionModelChange", this.state);
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import QuestionDetails from "./QuestionDetails";
 
-const QuestionList = ( {questions, onUpvoteQuestion, onDownvoteQuestion} ) => (
+const QuestionList = ( {questions, onUpvoteQuestion, onDownvoteQuestion, onExpandQuestion} ) => (
     <section className="container">
         <div className="box content">
             {
@@ -10,6 +10,7 @@ const QuestionList = ( {questions, onUpvoteQuestion, onDownvoteQuestion} ) => (
                         question={question}
                         onUpvoteQuestion={onUpvoteQuestion}
                         onDownvoteQuestion={onDownvoteQuestion}
+                        onExpandQuestion={onExpandQuestion}
                     />
                 ))
             }

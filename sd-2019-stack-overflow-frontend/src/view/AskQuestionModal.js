@@ -1,8 +1,8 @@
 import React from "react";
 
-const AskQuestionModal = ( {askQuestionModalClass, onCloseAskQuestionModal, newQuestion, newTag,
+const AskQuestionModal = ( {active, onCloseAskQuestionModal, newQuestion, newTag,
     onChangeNewQuestionProperty, onChangeNewTag, onCreateNewTag, onDeleteNewTag, onCreateQuestion} ) => (
-    <div className={askQuestionModalClass}>
+    <div className={"modal" + (active ? " is-active" : "")}>
         <div className="modal-background"></div>
         <div className="modal-card">
             <header className="modal-card-head">
